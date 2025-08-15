@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  to-do
-//
-//  Created by Danilo Alves dos Santos on 29/01/25.
-//
-
 import UIKit
 
 @main
