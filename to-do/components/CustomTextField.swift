@@ -1,7 +1,6 @@
 import UIKit
 
-class CustomTextField: UITextField {
-    
+class CustomTextField: UITextField {    
     init() {
         super.init(frame: .zero)
         
@@ -28,6 +27,7 @@ class CustomTextField: UITextField {
         contentVerticalAlignment = .center
         delegate = self
         font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        
     }
     
     private func setUpConstraints() {

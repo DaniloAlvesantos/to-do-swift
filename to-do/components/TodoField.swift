@@ -1,14 +1,20 @@
 import UIKit
 
+struct ToDoFieldData {
+    var text: String
+    var isCompleted: Bool
+}
+
 class TodoField: UIStackView {
-    public let identifier: String = "TodoField\(Int.random(in: 1..<100))"
+    public var identifier: String = ""
+    public var state: ToDoFieldData = ToDoFieldData(text: "", isCompleted: false)
     
     private lazy var todoCheckbox: CustomCheckbox = {
        return CustomCheckbox()
     }()
 
-    private lazy var todoTextField: CustomTextField = {
-        return CustomTextField()
+    private lazy var todoTextField: CustomTextView = {
+        return CustomTextView()
     }()
     
     private lazy var deleteButtonIcon: UIImageView = {
@@ -23,6 +29,16 @@ class TodoField: UIStackView {
         return imageView
     }()
     
+    public func configure(id: String, text: String, isCompleted: Bool) {
+        self.identifier = id
+        self.state = ToDoFieldData(text: text, isCompleted: isCompleted)
+        
+        self.todoTextField.text = text
+        self.todoCheckbox.isChecked = isCompleted
+        
+        self.checkBoxTapped()
+    }
+    
     init() {
         super.init(frame: .zero)
         
@@ -36,6 +52,12 @@ class TodoField: UIStackView {
         
         todoCheckbox.addTarget(self, action: #selector(checkBoxTapped), for: .touchUpInside)
         
+        // weak self prevent from memory leak and clouse the reference
+        todoTextField.onTextChanged = { [weak self] text in
+            guard let self = self else {return}
+            self.state.text = text
+        }
+        
         setUpDefaultStyles()
         setUpConstraints()
     }
@@ -44,9 +66,11 @@ class TodoField: UIStackView {
         deleteButtonIcon.tintColor = todoCheckbox.isChecked ? .gray : .systemBlue
         todoTextField.textColor = todoCheckbox.isChecked ? .gray : .black
         if(todoCheckbox.isChecked) {
+            self.state.isCompleted = true
             todoCheckbox.backgroundColor = .gray
             todoCheckbox.layer.borderColor = UIColor.gray.cgColor
         } else {
+            self.state.isCompleted = false
             todoCheckbox.setDefaultStyle()
         }
     }
